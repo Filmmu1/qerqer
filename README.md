@@ -1,3 +1,6 @@
+
+
+
 repeat wait() until game:IsLoaded()
 repeat wait() until game:GetService("Players")
 repeat wait() until game:GetService("Players").LocalPlayer
@@ -12,11 +15,14 @@ if not game:IsLoaded() then
 	task.wait(10);
 end;
 
+
+
+
 _G.Settings = {
 
 	Main = {
 		["Auto Farm Level"] = false,
-		["Fast Auto Farm Level"] = false,
+		["Fast Auto Farm Level"] = true,
 
 		--[Mob Aura]
 
@@ -76,7 +82,7 @@ _G.Settings = {
 	},
 	FightingStyle = {
 		["Auto God Human"] = false,
-		["Auto Superhuman"] = false,
+		["Auto Superhuman"] = true,
 		["Auto Electric Claw"] = false,
 		["Auto Death Step"] = false,
 		["Auto Fully Death Step"] = false,
@@ -99,8 +105,8 @@ _G.Settings = {
 		["Mob Health (%)"] = 15,
 	},
 	Configs = {
-		["Double Quest"] = false,
-		["Bypass TP"] = false,
+		["Double Quest"] = true,
+		["Bypass TP"] = true,
 		["Select Team"] = {"Pirate"}, --{Pirate,Marine}
 
 
@@ -108,6 +114,7 @@ _G.Settings = {
 		["Fast Attack Type"] = {"Fast"}, --{Normal,Fast,Slow}
 
 		["Select Weapon"] = {},
+		["Hide Ui"] = false,
 
 
 		--[Misc Configs]
@@ -130,14 +137,14 @@ _G.Settings = {
 	Stat = {
 		--[Auto Stats]
 		["Enabled Auto Stats"] = false,
-		["Auto Stats Kaitun"] = false,
+		["Auto Stats Kaitun"] = true,
 
 		["Select Stats"] = {"Melee"}, --{Max Stats,Melee,Defense,Sword,Devil Fruit,Gun}
-		["Point Select"] = 3, --{Recommended , Max : 9}
+		["Point Select"] = 9, --{Recommended , Max : 9}
 
 		--[Auto Redeem Code]
 
-		["Enabled Auto Redeem Code"] = false,
+		["Enabled Auto Redeem Code"] = true,
 		["Select Level Redeem Code"] = 1, --{Max : 2400}
 	},
 
@@ -213,16 +220,16 @@ _G.Kai = {
 
 function LoadSettings()
 	if readfile and writefile and isfile and isfolder then
-		if not isfolder("Unique Hub Premium Scripts") then
-			makefolder("Unique Hub Premium Scripts")
+		if not isfolder("Sulfurz Hub") then
+			makefolder("Sulfurz Hub")
 		end
-		if not isfolder("Unique Hub Premium Scripts/Blox Fruits/") then
-			makefolder("Unique Hub Premium Scripts/Blox Fruits/")
+		if not isfolder("Sulfurz Hub/Blox Fruits/") then
+			makefolder("Sulfurz Hub/Blox Fruits/")
 		end
-		if not isfile("Unique Hub Premium Scripts/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json") then
-			writefile("Unique Hub Premium Scripts/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json", game:GetService("HttpService"):JSONEncode(_G.Settings))
+		if not isfile("Sulfurz Hub/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json") then
+			writefile("Sulfurz Hub/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json", game:GetService("HttpService"):JSONEncode(_G.Settings))
 		else
-			local Decode = game:GetService("HttpService"):JSONDecode(readfile("Unique Hub Premium Scripts/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json"))
+			local Decode = game:GetService("HttpService"):JSONDecode(readfile("Sulfurz Hub/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json"))
 			for i,v in pairs(Decode) do
 				_G.Settings[i] = v
 			end
@@ -234,15 +241,15 @@ end
 
 function SaveSettings()
 	if readfile and writefile and isfile and isfolder then
-		if not isfile("Unique Hub Premium Scripts/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json") then
+		if not isfile("Sulfurz Hub/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json") then
 			LoadSettings()
 		else
-			local Decode = game:GetService("HttpService"):JSONDecode(readfile("Unique Hub Premium Scripts/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json"))
+			local Decode = game:GetService("HttpService"):JSONDecode(readfile("Sulfurz Hub/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json"))
 			local Array = {}
 			for i,v in pairs(_G.Settings) do
 				Array[i] = v
 			end
-			writefile("Unique Hub Premium Scripts/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json", game:GetService("HttpService"):JSONEncode(Array))
+			writefile("Sulfurz Hub/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json", game:GetService("HttpService"):JSONEncode(Array))
 		end
 	else
 		return warn("Status : Undetected Executor")
@@ -439,26 +446,6 @@ task.spawn(function()
 	end
 end)
 
--- [Deleted Effect Auto]
-
-task.spawn(function()
-	while wait() do
-		for i,v in pairs(game:GetService("Workspace")["_WorldOrigin"]:GetChildren()) do
-			pcall(function()
-				if v.Name == ("CurvedRing") or v.Name == ("SlashHit") or v.Name == ("SwordSlash") or v.Name == ("SlashTail") or v.Name == ("Sounds") then
-					v:Destroy()
-				end
-			end)
-		end
-	end
-end)
-
-if game:GetService("ReplicatedStorage").Effect.Container:FindFirstChild("Death") then
-	game:GetService("ReplicatedStorage").Effect.Container.Death:Destroy()
-end
-if game:GetService("ReplicatedStorage").Effect.Container:FindFirstChild("Respawn") then
-	game:GetService("ReplicatedStorage").Effect.Container.Respawn:Destroy()
-end
 
 -- [require module]
 
@@ -482,6 +469,21 @@ function DisabledDamage()
 			end)
 		end
 	end)
+end
+
+local decalsyeeted = true
+local g = game
+local w = g.Workspace
+local l = g.Lighting
+local t = w.Terrain
+
+for i, v in pairs(g:GetDescendants()) do
+	if v:IsA("ParticleEmitter") or v:IsA("Trail") then
+		v.Lifetime = NumberRange.new(0)
+	elseif v:IsA("Explosion") then
+		v.BlastPressure = 1
+		v.BlastRadius = 1
+	end
 end
 
 -- [Camera Shaker Function]
@@ -705,11 +707,11 @@ local function toTarget(...)
 				fkwarp = false
 
 				if game:GetService("Players")["LocalPlayer"].Data:FindFirstChild("SpawnPoint").Value == tostring(GetIsLand(RealTarget)) then 
-					wait(.1)
+					wait()
 					Com("F_","TeleportToSpawn")
 				elseif game:GetService("Players")["LocalPlayer"].Data:FindFirstChild("LastSpawnPoint").Value == tostring(GetIsLand(RealTarget)) then
 					game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(15)
-					wait(0.1)
+					wait()
 					repeat wait() until game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid").Health > 0
 				else
 					if game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid").Health > 0 then
@@ -718,13 +720,13 @@ local function toTarget(...)
 						end
 						fkwarp = true
 					end
-					wait(.08)
+					wait()
 					game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(15)
 					repeat wait() until game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid").Health > 0
-					wait(.1)
+					wait()
 					Com("F_","SetSpawnPoint")
 				end
-				wait(0.2)
+				wait()
 
 				return
 			end)
@@ -866,7 +868,6 @@ end
 
 -- [Server Hop Api]
 
-local ServerHop = loadstring(game:HttpGet("https://raw.githubusercontent.com/SixZensED/Secret-0.02/main/ServerHop.lua"))()
 
 -- [Remove Text Fruits]
 
@@ -3453,15 +3454,15 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/SixZe
 
 local Main = Library.xova()
 
-local Tab1 = Main.create("เมนูหลัก")
+local Tab1 = Main.create("Main")
 
-local Tab2 = Main.create("ผู้เล่น/สเเตก")
+local Tab2 = Main.create("Players/Stats")
 
-local Tab3 = Main.create("วาป/ดันเจี้ยน")
+local Tab3 = Main.create("Teleport/Raid")
 
-local Tab4 = Main.create("ร้านค้า")
+local Tab4 = Main.create("Shop")
 
-local Tab5 = Main.create("อื่น ๆ")
+local Tab5 = Main.create("Misc")
 
 -------------[Tab1]-------------
 
@@ -3547,7 +3548,7 @@ function AutoFarmLevel()
 	GetQuest = game:GetService("Players").LocalPlayer.PlayerGui.Main.Quest
 	local MyLevel = game.Players.LocalPlayer.Data.Level.Value
 
-	if _G.Settings.Main["ออโต้ฟาร์มเร็ว"] and (MyLevel >= 15 and MyLevel <= 300) then
+	if _G.Settings.Main["Fast Auto Farm Level"] and (MyLevel >= 15 and MyLevel <= 300) then
 		if _G.Settings.Configs["Auto Haki"] then
 			if not game.Players.LocalPlayer.Character:FindFirstChild("HasBuso") then
 				game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Buso")
@@ -3564,25 +3565,25 @@ function AutoFarmLevel()
 			_G.RedeemCodeLocalFastAutoFarm = true
 		end
 		if MyLevel >= 15 and MyLevel <= 70 then
-			local CFrameMon = CFrame.new(-4698, 845, -1912)
-			if game:GetService("Workspace").Enemies:FindFirstChild("God's Guard [Lv. 450]") then
+			local CFrameMon = CFrame.new(-7678.5542, 5566.71973, -494.142242, -0.778590381, 5.38501013e-08, -0.627532482, 4.87867347e-08, 1, 2.52819081e-08, 0.627532482, -1.09310099e-08, -0.778590381)
+			if game:GetService("Workspace").Enemies:FindFirstChild("Shanda [Lv. 475]") then
 				for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
-					if _G.Settings.Main["Fast Auto Farm Level"] and v.Name == "God's Guard [Lv. 450]" and v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
+					if _G.Settings.Main["Fast Auto Farm Level"] and v.Name == "Shanda [Lv. 475]" and v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
 						repeat wait()
 							FarmtoTarget = toTarget(v.HumanoidRootPart.CFrame * CFrame.new(0,30,1))
 							if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and (v.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude <= 300 then
 								if FarmtoTarget then FarmtoTarget:Stop() end
 								for i2,v2 in pairs(game:GetService("Workspace").Enemies:GetChildren()) do 
-									if _G.Settings.Main["Fast Auto Farm Level"] and v2.Name == "God's Guard [Lv. 450]" and v2:FindFirstChild("HumanoidRootPart") and v2:FindFirstChild("Humanoid") and v2.Humanoid.Health > 0 then
-										if InMyNetWork(v2.HumanoidRootPart) then
-											v2.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame
-											v2.Humanoid.JumpPower = 0
-											v2.Humanoid.WalkSpeed = 0
-											v2.HumanoidRootPart.CanCollide = false
-											v2.Humanoid:ChangeState(14)
-											v2.Humanoid:ChangeState(11)
-											v2.HumanoidRootPart.Size = Vector3.new(55,55,55)
-										end
+									if _G.Settings.Main["Fast Auto Farm Level"] and v2.Name == "Shanda [Lv. 475]" and v2:FindFirstChild("HumanoidRootPart") and v2:FindFirstChild("Humanoid") and v2.Humanoid.Health > 0 then
+										StartMagnet = true
+										v2.HumanoidRootPart.Size = Vector3.new(50,30,0)
+								        v2.Humanoid:ChangeState(14)
+								        v2.HumanoidRootPart.CanCollide = false
+								        v2.Head.CanCollide = false
+								        v2.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame
+								        if v2.Humanoid:FindFirstChild("Animator") then
+								            v2.Humanoid.Animator:Destroy()
+								        end
 									end
 								end
 								if game.Players.LocalPlayer.Character:FindFirstChild("Black Leg") and game.Players.LocalPlayer.Character:FindFirstChild("Black Leg").Level.Value >= 150 then
@@ -3605,15 +3606,16 @@ function AutoFarmLevel()
 								FastAttack = true
 								EquipWeapon(_G.Settings.Configs["Select Weapon"])
 							end
-						until not (game:GetService("Workspace").Enemies:FindFirstChild("God's Guard [Lv. 450]")) or not (_G.Settings.Main["Fast Auto Farm Level"] or _G.Settings.Main["Auto Farm Level"]) or v.Humanoid.Health <= 0 or not v.Parent
+						until not (game:GetService("Workspace").Enemies:FindFirstChild("Shanda [Lv. 475]")) or not (_G.Settings.Main["Fast Auto Farm Level"] or _G.Settings.Main["Auto Farm Level"]) or v.Humanoid.Health <= 0 or not v.Parent
 						FastAttack = false
+						StartMagnet = false
 					end
 				end
 			else
 				Modstween = toTarget(CFrameMon)
-				if World1 and (CFrameMon.Position - game:GetService("Players").LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude >1500 then
+				if World1 and (CFrameMon.Position - game:GetService("Players").LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude >= 1500 then
 					if Modstween then Modstween:Stop() end wait(.5)
-					game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("requestEntrance",Vector3.new(-4607.8227539063, 872.54248046875, -1667.5568847656))
+					game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("requestEntrance",Vector3.new(-7894.61768, 5545.4917, -380.291199, -0.367818832, 6.16680254e-08, -0.929897487, 2.75895573e-08, 1, 5.54040298e-08, 0.929897487, -5.2768141e-09, -0.367818832))
 				elseif (CFrameMon.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude <= 150 then
 					if Modstween then Modstween:Stop() end
 					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrameMon
@@ -3622,25 +3624,25 @@ function AutoFarmLevel()
 		elseif MyLevel >= 70 and MyLevel <= 300 then
 			if GetQuest.Visible == false then
 				if not tostring(game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("PlayerHunter")):find("We heard some") then 
-					local CFrameMon = CFrame.new(-4698, 845, -1912)
-					if game:GetService("Workspace").Enemies:FindFirstChild("God's Guard [Lv. 450]") then
+					local CFrameMon = CFrame.new(-7678.5542, 5566.71973, -494.142242, -0.778590381, 5.38501013e-08, -0.627532482, 4.87867347e-08, 1, 2.52819081e-08, 0.627532482, -1.09310099e-08, -0.778590381)
+					if game:GetService("Workspace").Enemies:FindFirstChild("Shanda [Lv. 475]") then
 						for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
-							if _G.Settings.Main["Fast Auto Farm Level"] and v.Name == "God's Guard [Lv. 450]" and v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
+							if _G.Settings.Main["Fast Auto Farm Level"] and v.Name == "Shanda [Lv. 475]" and v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
 								repeat wait()
 									FarmtoTarget = toTarget(v.HumanoidRootPart.CFrame * CFrame.new(0,30,1))
 									if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and (v.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude <= 300 then
 										if FarmtoTarget then FarmtoTarget:Stop() end
 										for i2,v2 in pairs(game:GetService("Workspace").Enemies:GetChildren()) do 
-											if _G.Settings.Main["Fast Auto Farm Level"] and v2.Name == "God's Guard [Lv. 450]" and v2:FindFirstChild("HumanoidRootPart") and v2:FindFirstChild("Humanoid") and v2.Humanoid.Health > 0 then
-												if InMyNetWork(v2.HumanoidRootPart) then
-													v2.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame
-													v2.Humanoid.JumpPower = 0
-													v2.Humanoid.WalkSpeed = 0
-													v2.HumanoidRootPart.CanCollide = false
-													v2.Humanoid:ChangeState(14)
-													v2.Humanoid:ChangeState(11)
-													v2.HumanoidRootPart.Size = Vector3.new(55,55,55)
-												end
+											if _G.Settings.Main["Fast Auto Farm Level"] and v2.Name == "Shanda [Lv. 475]" and v2:FindFirstChild("HumanoidRootPart") and v2:FindFirstChild("Humanoid") and v2.Humanoid.Health > 0 then
+												StartMagnet = true
+												v2.HumanoidRootPart.Size = Vector3.new(50,30,0)
+								                v2.Humanoid:ChangeState(14)
+								                v2.HumanoidRootPart.CanCollide = false
+								                v2.Head.CanCollide = false
+								                v2.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame
+								                if v2.Humanoid:FindFirstChild("Animator") then
+								                    v2.Humanoid.Animator:Destroy()
+								                end
 											end
 										end
 										if game.Players.LocalPlayer.Character:FindFirstChild("Black Leg") and game.Players.LocalPlayer.Character:FindFirstChild("Black Leg").Level.Value >= 150 then
@@ -3663,15 +3665,16 @@ function AutoFarmLevel()
 										FastAttack = true
 										EquipWeapon(_G.Settings.Configs["Select Weapon"])
 									end
-								until not (game:GetService("Workspace").Enemies:FindFirstChild("God's Guard [Lv. 450]")) or not (_G.Settings.Main["Fast Auto Farm Level"] or _G.Settings.Main["Auto Farm Level"]) or v.Humanoid.Health <= 0 or not v.Parent
+								until not (game:GetService("Workspace").Enemies:FindFirstChild("Shanda [Lv. 475]")) or not (_G.Settings.Main["Fast Auto Farm Level"] or _G.Settings.Main["Auto Farm Level"]) or v.Humanoid.Health <= 0 or not v.Parent
 								FastAttack = false
+								StartMagnet = false
 							end
 						end
 					else
 						Modstween = toTarget(CFrameMon)
 						if World1 and (CFrameMon.Position - game:GetService("Players").LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude >1500 then
 							if Modstween then Modstween:Stop() end wait(.5)
-							game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("requestEntrance",Vector3.new(-4607.8227539063, 872.54248046875, -1667.5568847656))
+							game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("requestEntrance",Vector3.new(-7894.61768, 5545.4917, -380.291199, -0.367818832, 6.16680254e-08, -0.929897487, 2.75895573e-08, 1, 5.54040298e-08, 0.929897487, -5.2768141e-09, -0.367818832))
 						elseif (CFrameMon.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude <= 150 then
 							if Modstween then Modstween:Stop() end
 							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrameMon
@@ -3734,8 +3737,8 @@ function AutoFarmLevel()
 										EquipWeapon(_G.Settings.Configs["Select Weapon"])
 										AttackPlayers()
 										wait(.1)
-										-- game:service('VirtualInputManager'):SendKeyEvent(true, "Z", false, game)
-										-- game:service('VirtualInputManager'):SendKeyEvent(false, "Z", false, game)
+										game:service('VirtualInputManager'):SendKeyEvent(true, "Z", false, game)
+										game:service('VirtualInputManager'):SendKeyEvent(false, "Z", false, game)
 										game:service('VirtualInputManager'):SendKeyEvent(true, "X", false, game)
 										game:service('VirtualInputManager'):SendKeyEvent(false, "X", false, game)
 									end
@@ -3828,7 +3831,7 @@ function AutoFarmLevel()
 			elseif (CFrameQuest.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude <= 250 then
 				if Questtween then Questtween:Stop() end
 				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrameQuest
-				wait(1)
+				wait()
 				if game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid").Health > 0 then
 					Com("F_","StartQuest", QuestName, LevelQuest)
 					Com("F_","SetSpawnPoint")
@@ -3854,11 +3857,6 @@ function AutoFarmLevel()
 									end
 									StartMagnet = true
 									FastAttack = true
-									if game.Players.LocalPlayer.Data.Level.Value >= 20 and game.Players.LocalPlayer.Data.Level.Value <= 90 then
-										_G.Settings.Configs["Fast Attack Type"] = "Slow"
-									else
-										_G.Settings.Configs["Fast Attack Type"] = "Fast"
-									end
 									if not _G.Settings.Configs["Fast Attack"] then
 										game:GetService'VirtualUser':CaptureController()
 										game:GetService'VirtualUser':Button1Down(Vector2.new(1280, 672))
@@ -3911,6 +3909,32 @@ function AutoFarmLevel()
 	end
 end
 
+_G.BringMonster = true
+ 
+	spawn(function()
+		while task.wait() do
+			pcall(function()
+				if _G.BringMonster then
+					for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+						if  _G.Settings.Main["Fast Auto Farm Level"] and Magnetf then
+							if (v.Name == "God's Guard [Lv. 450]") and (v.HumanoidRootPart.Position - posmonf.Position).Magnitude <= 250 and v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 then
+								v.HumanoidRootPart.Size = Vector3.new(50,30,0)
+								v.Humanoid:ChangeState(14)
+								v.HumanoidRootPart.CanCollide = false
+								v.Head.CanCollide = false
+								v.HumanoidRootPart.CFrame = posmonf
+								if v.Humanoid:FindFirstChild("Animator") then
+									v.Humanoid.Animator:Destroy()
+								end
+								sethiddenproperty(game:GetService("Players").LocalPlayer, "SimulationRadius", math.huge)
+							end
+						end
+					end
+				end
+			end)
+		end
+	end)
+
 -- [Check Notification]
 
 function CheckNotifyComplete()
@@ -3944,17 +3968,18 @@ task.spawn(function()
 							end
 						end
 					else
+						CheckOldQuest()
 						CheckQuest()
 						oldmob = Name
 						oldcheckquest = NameMon
 						spawn(function()
 							pcall(function()
 								if NoLoopDuplicate == false then 
-									if CheckNotifyComplete() and _G.Settings.Main["Auto Farm Level"] then
+									if _G.Settings.Main["Auto Farm Level"] then
 										NoLoopDuplicate = true 
 										while wait() do
 											SubQuest = true
-											if CheckNotifyComplete() or _G.Settings.Main["Auto Farm Level"] == false then
+											if _G.Settings.Main["Auto Farm Level"] == false then
 												break;
 											end
 										end
@@ -4201,6 +4226,9 @@ if World1 then
 							if Auto_Farm_Level then
 								_G.Settings.Main["Auto Farm Level"] = false
 							end
+							if _G.Settings.Configs["Bypass TP"] then
+								_G.Settings.Configs["Bypass TP"] = false
+							end
 							if game:GetService("Workspace").Map.Jungle.Final.Part.Transparency == 0 then
 								if game:GetService("Workspace").Map.Jungle.QuestPlates.Door.Transparency == 0 then
 									if (CFrame.new(-1612.55884, 36.9774132, 148.719543, 0.37091279, 3.0717151e-09, -0.928667724, 3.97099491e-08, 1, 1.91679348e-08, 0.928667724, -4.39869794e-08, 0.37091279).Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 100 then
@@ -4325,6 +4353,7 @@ if World1 then
 												game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("ProQuestProgress","PlaceRelic")
 											end
 											_G.Settings.Main["Auto Farm Level"] = true
+											_G.Settings.Configs["Bypass TP"] = true
 										end
 									end
 								end
@@ -4335,6 +4364,7 @@ if World1 then
 			end)
 		end,
 	})
+
 
 	Page2.Toggle({
 		Title = "Auto Pole",
@@ -6742,7 +6772,19 @@ elseif World3 then
 												v.Humanoid.WalkSpeed = 0
 												v.HumanoidRootPart.CanCollide = false
 												v.Humanoid:ChangeState(11)
-												toTarget(v.HumanoidRootPart.CFrame * CFrame.new(0,_G.Settings.Configs["Distance Auto Farm"],0))
+												if AttackRandomType == 1 then
+													toTarget(v.HumanoidRootPart.CFrame * CFrame.new(0, 60, 1))
+												elseif AttackRandomType == 2 then
+													toTarget(v.HumanoidRootPart.CFrame * CFrame.new(0, 1, 60))
+												elseif AttackRandomType == 3 then
+													toTarget(v.HumanoidRootPart.CFrame * CFrame.new(1, 1, -60))
+												elseif AttackRandomType == 4 then
+													toTarget(v.HumanoidRootPart.CFrame * CFrame.new(60, 1, 0))
+												elseif AttackRandomType == 5 then
+													toTarget(v.HumanoidRootPart.CFrame * CFrame.new(-60, 1, 0))
+												else
+													toTarget(v.HumanoidRootPart.CFrame * CFrame.new(0, 60, 1))
+												end
 											end
 										until not _G.Settings.Main["Auto Cake Prince"] or not v.Parent or v.Humanoid.Health <= 0
 										FastAttack = false
@@ -6796,7 +6838,19 @@ elseif World3 then
 												v.Humanoid.WalkSpeed = 0
 												v.HumanoidRootPart.CanCollide = false
 												v.Humanoid:ChangeState(11)
-												toTarget(v.HumanoidRootPart.CFrame * CFrame.new(0,_G.Settings.Configs["Distance Auto Farm"],0))
+												if AttackRandomType == 1 then
+													toTarget(v.HumanoidRootPart.CFrame * CFrame.new(0, 60, 1))
+												elseif AttackRandomType == 2 then
+													toTarget(v.HumanoidRootPart.CFrame * CFrame.new(0, 1, 60))
+												elseif AttackRandomType == 3 then
+													toTarget(v.HumanoidRootPart.CFrame * CFrame.new(1, 1, -60))
+												elseif AttackRandomType == 4 then
+													toTarget(v.HumanoidRootPart.CFrame * CFrame.new(60, 1, 0))
+												elseif AttackRandomType == 5 then
+													toTarget(v.HumanoidRootPart.CFrame * CFrame.new(-60, 1, 0))
+												else
+													toTarget(v.HumanoidRootPart.CFrame * CFrame.new(0, 60, 1))
+												end
 											end
 										until not _G.Settings.Main["Auto Cake Prince"] or not v.Parent or v.Humanoid.Health <= 0
 										StartMagnet = false
@@ -8230,15 +8284,15 @@ coroutine.wrap(function()
 			if FastAttack and _G.Settings.Configs["Fast Attack"] then
 				AttackFunction()
 				if _G.Settings.Configs["Fast Attack Type"] == "Normal" then
-					if tick() - cooldownfastattack > .9 then wait(.1) cooldownfastattack = tick() end
+					if tick() - cooldownfastattack > .1 then wait(.1) cooldownfastattack = tick() end
 				elseif _G.Settings.Configs["Fast Attack Type"] == "Fast" then
-					if tick() - cooldownfastattack > 1.5 then wait(.01) cooldownfastattack = tick() end
+					if tick() - cooldownfastattack > 0 then wait(0) cooldownfastattack = tick() end
 				elseif _G.Settings.Configs["Fast Attack Type"] == "Slow" then
-					if tick() - cooldownfastattack > .3 then wait(.7) cooldownfastattack = tick() end
+					if tick() - cooldownfastattack > .5 then wait(.5) cooldownfastattack = tick() end
 				end
 			elseif FastAttack and _G.Settings.Configs["Fast Attack"] == false then
-				if ac.hitboxMagnitude ~= 55 then
-					ac.hitboxMagnitude = 55
+				if ac.hitboxMagnitude ~= 120 then
+					ac.hitboxMagnitude = 120
 				end
 				ac:attack()
 			end
@@ -11810,6 +11864,7 @@ end
 Page14.Button({
 	Title = "Kaitun Cap",
 	callback = function(value)
+		game:GetService("Players").teekung3255.PlayerGui.Backpack.Enabled = true
 		local cac = require(game:GetService("Players").LocalPlayer.PlayerGui.Main.UIController.Inventory)
 		local Inventory = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("getInventory")
 		local Items = {}
@@ -12816,16 +12871,12 @@ Page16.Button({Title = "Rejoin", callback = function()
 	local ts = game:GetService("TeleportService") local p = game.Players.LocalPlayer ts:Teleport(game.PlaceId, p)
 end})
 
-_G.Settings.Misc['Auto Rejoin'] = true
+_G.Settings.Misc["Hide Ui"] = true
+if _G.Settings.Misc["Hide Ui"] then
+	game:GetService("VirtualInputManager"):SendKeyEvent(true,"RightControl",false,game)
+end
 
-Page16.Toggle({
-	Title = "Auto Rejoin",
-	Default = _G.Settings.Misc['Auto Rejoin'],
-	callback = function(value)
-		_G.Settings.Misc['Auto Rejoin'] = value
-		SaveSettings()
-	end,
-})
+_G.Settings.Misc['Auto Rejoin'] = true
 
 spawn(function()
 	while wait() do
